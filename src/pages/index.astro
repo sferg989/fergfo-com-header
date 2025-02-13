@@ -1,0 +1,149 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import OptionsTable from '../components/optionsTable.astro';
+import SearchForm from '../components/searchForm.astro';
+
+// Get the symbol from URL params with more robust handling
+const currentUrl = new URL(Astro.request.url);
+const symbol = currentUrl.searchParams.get('symbol')?.toUpperCase();
+
+
+---
+
+<Layout
+  title={symbol ? `${symbol} Options Data` : 'Stock Options Data'}
+  description={symbol ? `View real-time options data for ${symbol} stock` : 'Analyze stock options data with advanced filtering'}
+  currentPath={currentUrl.pathname}
+>
+  <main class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center gap-4">
+        <h1 class="text-3xl font-bold text-gray-800">Stock Options Data</h1>
+        <a
+          href="/preferred"
+          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+        >
+          View Preferred Stocks
+        </a>
+      </div>
+      <SearchForm symbol={symbol} />
+    </div>
+
+    {symbol ? (
+      <OptionsTable symbol={symbol} />
+    ) : (
+      <div class="text-center p-8 bg-gray-50 rounded-lg">
+        <p class="text-gray-600">Enter a stock symbol to view options data</p>
+      </div>
+    )}
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  input:invalid {
+    @apply border-red-200;
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.9),
+      rgba(254, 226, 226, 0.3)
+    );
+  }
+
+  input:invalid:focus {
+    @apply border-red-400 ring-red-100;
+  }
+
+  .form-group {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Enhanced input focus animation */
+  input:focus {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.06),
+      0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Floating label animation */
+  .form-group:focus-within div {
+    transform: translateY(-1px);
+    color: rgb(37, 99, 235);
+    border-color: rgba(37, 99, 235, 0.2);
+    background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,1));
+  }
+
+  /* Glass morphism effect on hover */
+  input:hover {
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.8)
+    );
+  }
+
+  /* Add subtle text shadow to input text */
+  input {
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+
+  /* Add shimmer effect on hover */
+  button:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    100% {
+      left: 200%;
+    }
+  }
+
+  /* Smooth transition for input focus */
+  input {
+    transition: all 0.2s ease-in-out;
+  }
+</style>
+
+<script>
+  let refreshInterval: ReturnType<typeof setInterval>;
+
+  function startAutoRefresh() {
+    refreshInterval = setInterval(() => {
+      const url = new URL(window.location.href);
+      const currentSymbol = url.searchParams.get('symbol');
+      if (currentSymbol) {
+        console.log('Auto-refreshing data for:', currentSymbol);
+        window.location.reload();
+      }
+    }, 60000); // 60 seconds
+  }
+
+  startAutoRefresh();
+
+  window.addEventListener('unload', () => {
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+    }
+  });
+</script>
+

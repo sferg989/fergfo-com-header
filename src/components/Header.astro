@@ -1,0 +1,112 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { path: '/', label: 'Options Data' },
+  { path: '/preferred', label: 'Preferred Stocks' },
+  { path: '/watchlist', label: 'Watchlist' },
+] as const;
+---
+
+<header class="bg-white shadow-sm border-b border-gray-200">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo/Brand -->
+      <div class="flex items-center">
+        <a href="/" class="flex items-center gap-2">
+          <svg
+            class="w-8 h-8 text-green-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 13.2L8.5 19L21 5"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="text-xl font-bold text-gray-900">StockOptions</span>
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="hidden md:flex items-center gap-1">
+        {navItems.map(({ path, label }) => (
+          <a
+            href={path}
+            class:list={[
+              'px-4 py-2 rounded-md text-sm font-medium transition-colors',
+              {
+                'bg-green-50 text-green-700': currentPath === path,
+                'text-gray-600 hover:text-gray-900 hover:bg-gray-50': currentPath !== path
+              }
+            ]}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button
+        type="button"
+        class="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+        aria-label="Toggle menu"
+        data-toggle-menu
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+      class="hidden md:hidden py-2 space-y-1"
+      data-mobile-menu
+    >
+      {navItems.map(({ path, label }) => (
+        <a
+          href={path}
+          class:list={[
+            'block px-4 py-2 text-base font-medium rounded-md transition-colors',
+            {
+              'bg-green-50 text-green-700': currentPath === path,
+              'text-gray-600 hover:text-gray-900 hover:bg-gray-50': currentPath !== path
+            }
+          ]}
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggleButton = document.querySelector('[data-toggle-menu]');
+  const mobileMenu = document.querySelector('[data-mobile-menu]');
+
+  if (toggleButton && mobileMenu) {
+    toggleButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+</script>
