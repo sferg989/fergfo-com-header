@@ -1,45 +1,25 @@
 ---
 export const prerender = false;
+import SEO from '../components/seo.astro';
+import Header from '../components/Header.astro';
 
-import Layout from '../layouts/Layout.astro';
-import OptionsTable from '../components/optionsTable.astro';
-import SearchForm from '../components/searchForm.astro';
 
 // Get the symbol from URL params with more robust handling
 const currentUrl = new URL(Astro.request.url);
-const symbol = currentUrl.searchParams.get('symbol')?.toUpperCase();
 
 
 ---
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO title="FergFo.com" description="FergFo.com" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <Header currentPath={currentUrl.pathname} />
 
-<Layout
-  title={symbol ? `${symbol} Options Data` : 'Stock Options Data'}
-  description={symbol ? `View real-time options data for ${symbol} stock` : 'Analyze stock options data with advanced filtering'}
-  currentPath={currentUrl.pathname}
->
-  <main class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center gap-4">
-        <h1 class="text-3xl font-bold text-gray-800">Stock Options Data</h1>
-        <a
-          href="/preferred"
-          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-        >
-          View Preferred Stocks
-        </a>
-      </div>
-      <SearchForm symbol={symbol} />
-    </div>
-
-    {symbol ? (
-      <OptionsTable symbol={symbol} />
-    ) : (
-      <div class="text-center p-8 bg-gray-50 rounded-lg">
-        <p class="text-gray-600">Enter a stock symbol to view options data</p>
-      </div>
-    )}
-  </main>
-</Layout>
+  </body>
+</html>
 
 <style>
   .container {
