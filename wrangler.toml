@@ -1,4 +1,7 @@
 name = "fergfo-header-fragment"
-
-
 account_id = "bf9a1ae5b7974b7510d15e0d5b6a8ebc"
+main = "dist/_worker.js"
+compatibility_date = "2024-01-01"
+
+[site]
+bucket = "./dist"

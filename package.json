@@ -7,6 +7,7 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy",
     "lint": "eslint --fix \"src/**/*.{js,ts,jsx,tsx,astro}\"",
     "all": "astro check && eslint --fix \"src/**/*.{js,ts,jsx,tsx,astro}\"",
     "astro:check": "astro check",
