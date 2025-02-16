@@ -1,7 +1,14 @@
 name = "fergfo-header-fragment"
 account_id = "bf9a1ae5b7974b7510d15e0d5b6a8ebc"
-main = "dist/_worker.js"
+main = "worker/script.ts"
 compatibility_date = "2024-01-01"
+
+[build]
+command = "npm run build"
+watch_dir = "worker"
 
 [site]
 bucket = "./dist"
+
+[dev]
+port = 8787
